@@ -1,5 +1,5 @@
 import React from 'react';
-import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import { HashRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { useAuth } from './shared/hooks/useAuth.js';
 import { Layout } from './shared/components/Layout.js';
 import { LoginPage } from './features/auth/LoginPage.js';
@@ -68,7 +68,7 @@ const DashboardRoute = () => {
 
 function App() {
   return (
-    <Router basename="/betalala">
+    <Router>
       <Layout>
         <Routes>
           <Route path="/login" element={<LoginPage />} />
