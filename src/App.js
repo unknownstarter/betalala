@@ -68,7 +68,7 @@ const DashboardRoute = () => {
 
 function App() {
   return (
-    <Router basename={process.env.PUBLIC_URL}>
+    <Router basename="/betalala">
       <Layout>
         <Routes>
           <Route path="/login" element={<LoginPage />} />
