@@ -1,70 +1,142 @@
-# Getting Started with Create React App
+# 테스터 인증 시스템
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+선정된 테슬라 유저 대상 테스터들이 **차량 연동부터 NFT 민팅까지의 실제 플로우를 인증/기록**할 수 있도록, **간단한 웹 페이지**를 통해 인증 자료(스크린샷 등)를 업로드하는 시스템입니다.
 
-## Available Scripts
+## 🎯 주요 기능
 
-In the project directory, you can run:
+### 1. 로그인/회원 인증 (초대된 테스터 전용)
+- 이메일/비밀번호 기반 로그인
+- Supabase Auth 사용
+- 회원가입은 미허용 (관리자만 등록)
 
-### `npm start`
+### 2. 코어 테스트 인증 (1회 제출)
+- 리사이클팜 앱 회원가입 및 전화번호 인증
+- 테슬라 차량 연동 화면 인증
+- EV 주행거리 업데이트 성공 화면
+- 크레딧 획득 UI 인증
+- NFT 민팅 성공 화면 인증
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+### 3. 데일리 테스트 인증 (반복 제출)
+- 매일 수행할 주행거리 업데이트 및 크레딧 수집 결과 인증
+- 입력 필드: 날짜, EV 업데이트 화면 스크린샷, 크레딧 수집 화면 인증
+- 달력 형태 또는 리스트로 제출 내역 확인 가능
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+### 4. 대시보드
+- 코어 테스트 진행률 시각화
+- 데일리 테스트 통계
+- 최근 인증 이력 조회
 
-### `npm test`
+## 🏗️ 아키텍처
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+### 클린 아키텍처 기반 구조
+```
+src/
+├── core/                    # 비즈니스 로직
+│   ├── entities/           # 도메인 엔티티
+│   ├── usecases/          # 유스케이스
+│   └── interfaces/        # 인터페이스
+├── features/              # 기능별 페이지
+│   ├── auth/             # 인증
+│   ├── core-tests/       # 코어 테스트
+│   ├── daily-tests/      # 데일리 테스트
+│   └── dashboard/        # 대시보드
+├── shared/               # 공통 컴포넌트
+│   ├── components/       # UI 컴포넌트
+│   ├── hooks/           # 커스텀 훅
+│   └── utils/           # 유틸리티
+└── infrastructure/      # 인프라스트럭처
+    ├── supabase/        # Supabase 관련
+    └── services/        # 서비스 컨테이너
+```
 
-### `npm run build`
+## 🛠️ 기술 스택
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+| 영역 | 스택 |
+|------|------|
+| 프론트엔드 | React, Tailwind CSS |
+| 백엔드/DB | Supabase (Auth + DB + Storage) |
+| 라우팅 | React Router DOM |
+| 상태관리 | React Hooks |
+| UI 라이브러리 | Headless UI, Heroicons |
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+## 🚀 시작하기
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+### 1. 의존성 설치
+```bash
+npm install
+```
 
-### `npm run eject`
+### 2. 환경 설정
+Supabase 설정이 이미 완료되어 있습니다:
+- URL: `https://lwdqeumtozjiqzygcmsi.supabase.co`
+- Anon Key: `eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...`
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+### 3. 개발 서버 실행
+```bash
+npm start
+```
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+### 4. 빌드
+```bash
+npm run build
+```
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+## 📊 데이터베이스 스키마
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+### 1. `user_profiles` 테이블
+사용자 기본 정보 및 테스트 시작일 관리
 
-## Learn More
+### 2. `core_tests` 테이블
+기초 미션 5단계 완료 기록
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+### 3. `daily_tests` 테이블
+데일리 미션 완료 기록 (매일 주행거리 + 크레딧 인증)
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+### 4. `user_achievements` 테이블
+사용자 성취 및 통계 정보
 
-### Code Splitting
+## 🔐 보안
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+- Row Level Security (RLS) 정책 적용
+- 사용자는 자신의 데이터만 접근 가능
+- Supabase Auth를 통한 인증 관리
 
-### Analyzing the Bundle Size
+## 📱 사용자 플로우
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+```
+[테스터] 이메일 및 비밀번호 수령
+     ↓
+웹 로그인
+     ↓
+코어 테스트(1회성 인증) 단계 확인 → 단계별 인증 제출
+     ↓
+데일리 테스트(매일 인증) 단계 확인 → 매일 인증 제출
+     ↓
+전체 인증 이력 확인 가능 (내 이력 조회 기능)
+```
 
-### Making a Progressive Web App
+## 🎨 UI/UX 특징
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+- 반응형 디자인 (모바일/데스크톱 지원)
+- 직관적인 파일 업로드 (드래그 앤 드롭)
+- 실시간 진행률 표시
+- 에러 처리 및 로딩 상태 관리
+- 한국어 지원
 
-### Advanced Configuration
+## 🔧 개발 가이드
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
+### 새로운 기능 추가
+1. `core/entities/`에 엔티티 정의
+2. `core/usecases/`에 비즈니스 로직 구현
+3. `infrastructure/supabase/`에 리포지토리 구현
+4. `features/`에 UI 컴포넌트 생성
 
-### Deployment
+### 컴포넌트 작성 규칙
+- 함수형 컴포넌트 사용
+- 커스텀 훅으로 로직 분리
+- Tailwind CSS로 스타일링
+- 에러 상태 및 로딩 상태 처리
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
+## 📝 라이선스
 
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+이 프로젝트는 내부 테스터 인증용으로 개발되었습니다.

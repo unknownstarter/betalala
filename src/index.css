@@ -1,13 +1,872 @@
-body {
+/* Reset and base styles */
+* {
   margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
     'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  background: #f8fafc;
+  min-height: 100vh;
+  color: #1e293b;
+  line-height: 1.6;
 }
 
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
+}
+
+/* 토스 스타일 컨테이너 */
+.toss-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  padding: 24px;
+  background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+}
+
+/* 토스 스타일 카드 */
+.toss-card {
+  background: white;
+  border-radius: 20px;
+  padding: 48px 40px;
+  box-shadow: 
+    0 4px 6px -1px rgba(0, 0, 0, 0.1),
+    0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  max-width: 420px;
+  width: 100%;
+  border: 1px solid #e2e8f0;
+  animation: tossSlideUp 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+@keyframes tossSlideUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* 토스 스타일 타이포그래피 */
+.toss-title {
+  font-size: 28px;
+  font-weight: 700;
+  color: #1e293b;
+  text-align: center;
+  margin-bottom: 8px;
+  letter-spacing: -0.025em;
+}
+
+.toss-subtitle {
+  font-size: 16px;
+  color: #64748b;
+  text-align: center;
+  margin-bottom: 32px;
+  font-weight: 400;
+}
+
+/* 토스 스타일 폼 요소 */
+.toss-input-group {
+  margin-bottom: 20px;
+}
+
+.toss-input {
+  width: 100%;
+  padding: 16px 20px;
+  border: 2px solid #e2e8f0;
+  border-radius: 12px;
+  font-size: 16px;
+  transition: all 0.2s ease;
+  background: white;
+  color: #1e293b;
+  font-weight: 500;
+}
+
+.toss-input:focus {
+  outline: none;
+  border-color: #f97316;
+  box-shadow: 0 0 0 3px rgba(249, 115, 22, 0.1);
+}
+
+.toss-input::placeholder {
+  color: #94a3b8;
+  font-weight: 400;
+}
+
+/* 드롭다운 스타일 */
+.toss-form-input {
+  width: 100%;
+  padding: 12px 16px;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  font-size: 14px;
+  background: white;
+  color: #1e293b;
+  transition: all 0.2s ease;
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='m6 8 4 4 4-4'/%3e%3c/svg%3e");
+  background-position: center right 12px;
+  background-repeat: no-repeat;
+  background-size: 16px;
+  padding-right: 40px;
+}
+
+.toss-form-input:focus {
+  outline: none;
+  border-color: #f97316;
+  box-shadow: 0 0 0 3px rgba(249, 115, 22, 0.1);
+}
+
+.toss-form-input:hover {
+  border-color: #cbd5e1;
+}
+
+/* 토스 스타일 버튼 */
+.toss-button {
+  width: 100%;
+  padding: 16px 24px;
+  background: #f97316;
+  color: white;
+  border: none;
+  border-radius: 12px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.toss-button:hover {
+  background: #ea580c;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(249, 115, 22, 0.3);
+}
+
+.toss-button:active {
+  transform: translateY(0);
+}
+
+.toss-button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* 토스 스타일 네비게이션 */
+/* 네비게이션 */
+.toss-nav {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  background: white;
+  border-bottom: 1px solid #e2e8f0;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  z-index: 1000;
+}
+
+.toss-nav-content {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 16px;
+  height: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.toss-nav-brand {
+  font-size: 14px;
+  font-weight: 600;
+  color: #1e293b;
+  text-decoration: none;
+}
+
+.toss-nav-brand:hover {
+  color: #f97316;
+}
+
+.toss-nav-buttons {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+}
+
+.toss-nav-link {
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 11px;
+  font-weight: 500;
+  color: #64748b;
+  text-decoration: none;
+  transition: all 0.2s ease;
+  border: 1px solid transparent;
+}
+
+.toss-nav-link:hover {
+  color: #f97316;
+  background: #fef3c7;
+  border-color: #f97316;
+}
+
+.toss-nav-link.active {
+  color: white;
+  background: #f97316;
+  border-color: #f97316;
+}
+
+.toss-nav-button {
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 11px;
+  font-weight: 500;
+  border: 1px solid #f97316;
+  background: #f97316;
+  color: white;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.toss-nav-button:hover {
+  background: #ea580c;
+  border-color: #ea580c;
+}
+
+.toss-nav-button.logout {
+  background: #dc2626;
+  border-color: #dc2626;
+}
+
+.toss-nav-button.logout:hover {
+  background: #b91c1c;
+  border-color: #b91c1c;
+}
+
+/* 토스 스타일 대시보드 */
+.toss-dashboard {
+  padding: 80px 24px 24px;
+  max-width: 1200px;
+  margin: 0 auto;
+  min-height: 100vh;
+}
+
+.toss-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 24px;
+  margin-top: 32px;
+}
+
+.toss-card-dashboard {
+  background: white;
+  border-radius: 16px;
+  padding: 32px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  border: 1px solid #e2e8f0;
+  transition: all 0.2s ease;
+  cursor: pointer;
+}
+
+.toss-card-dashboard:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.toss-card-title {
+  font-size: 20px;
+  font-weight: 600;
+  color: #1e293b;
+  margin-bottom: 12px;
+}
+
+.toss-card-content {
+  color: #64748b;
+  line-height: 1.6;
+  margin-bottom: 20px;
+}
+
+.toss-card-stats {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #f97316;
+  font-weight: 600;
+  font-size: 24px;
+}
+
+/* 토스 스타일 테이블 */
+.toss-table {
+  background: white;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  border: 1px solid #e2e8f0;
+}
+
+.toss-table-header {
+  background: #f8fafc;
+  padding: 16px 24px;
+  border-bottom: 1px solid #e2e8f0;
+  font-weight: 600;
+  color: #475569;
+}
+
+.toss-table-row {
+  padding: 16px 24px;
+  border-bottom: 1px solid #f1f5f9;
+  transition: background 0.2s ease;
+}
+
+.toss-table-row:hover {
+  background: #f8fafc;
+}
+
+.toss-table-row:last-child {
+  border-bottom: none;
+}
+
+/* 토스 스타일 폼 */
+.toss-form {
+  background: white;
+  border-radius: 16px;
+  padding: 32px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  border: 1px solid #e2e8f0;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.toss-form-group {
+  margin-bottom: 24px;
+}
+
+.toss-form-label {
+  display: block;
+  font-weight: 500;
+  color: #374151;
+  margin-bottom: 8px;
+  font-size: 14px;
+}
+
+.toss-form-input {
+  width: 100%;
+  padding: 12px 16px;
+  border: 2px solid #e2e8f0;
+  border-radius: 8px;
+  font-size: 16px;
+  transition: all 0.2s ease;
+}
+
+.toss-form-input:focus {
+  outline: none;
+  border-color: #f97316;
+  box-shadow: 0 0 0 3px rgba(249, 115, 22, 0.1);
+}
+
+/* 토스 스타일 로딩 */
+.toss-loading {
+  display: inline-block;
+  width: 20px;
+  height: 20px;
+  border: 2px solid #e2e8f0;
+  border-radius: 50%;
+  border-top-color: #f97316;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* 토스 스타일 에러 */
+.toss-error {
+  background: #fef2f2;
+  border: 1px solid #fecaca;
+  color: #dc2626;
+  padding: 12px 16px;
+  border-radius: 8px;
+  margin-bottom: 16px;
+  font-size: 14px;
+}
+
+.toss-success {
+  background: #f0fdf4;
+  border: 1px solid #bbf7d0;
+  color: #16a34a;
+  padding: 12px 16px;
+  border-radius: 8px;
+  margin-bottom: 16px;
+  font-size: 14px;
+}
+
+/* 토스 스타일 타이틀 */
+.toss-page-title {
+  font-size: 32px;
+  font-weight: 700;
+  color: #1e293b;
+  margin-bottom: 8px;
+  text-align: center;
+}
+
+.toss-page-subtitle {
+  font-size: 16px;
+  color: #64748b;
+  text-align: center;
+  margin-bottom: 40px;
+}
+
+/* 토스 스타일 버튼 그룹 */
+.toss-button-group {
+  display: flex;
+  gap: 12px;
+  margin-top: 24px;
+}
+
+.toss-button-secondary {
+  background: #f8fafc;
+  color: #475569;
+  border: 1px solid #e2e8f0;
+}
+
+.toss-button-secondary:hover {
+  background: #f1f5f9;
+  color: #1e293b;
+}
+
+/* 필터 그리드 기본 스타일 */
+.toss-filter-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 16px;
+  width: 100%;
+}
+
+/* 반응형 디자인 */
+@media (max-width: 768px) {
+  .toss-card {
+    padding: 32px 24px;
+    margin: 16px;
+  }
+  
+  .toss-title {
+    font-size: 24px;
+  }
+  
+  .toss-nav-content {
+    padding: 0 8px;
+    justify-content: space-between;
+    height: 44px;
+  }
+
+  .toss-nav-brand {
+    font-size: 12px;
+    font-weight: 600;
+  }
+
+  .toss-nav-buttons {
+    gap: 3px;
+  }
+
+  .toss-nav-link {
+    padding: 3px 6px;
+    font-size: 10px;
+    border-radius: 3px;
+  }
+
+  .toss-nav-button {
+    padding: 3px 6px;
+    font-size: 10px;
+    border-radius: 3px;
+  }
+  
+  .toss-dashboard {
+    padding: 60px 16px 16px;
+    max-width: 100%;
+  }
+  
+  .toss-grid {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+  
+  .toss-button-group {
+    flex-direction: column;
+  }
+
+  /* 필터 섹션 모바일 스타일 */
+  .toss-filter-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  /* 모바일에서 테이블 숨기기 */
+  .toss-table-desktop {
+    display: none !important;
+  }
+
+  /* 모바일에서 카드 보이기 */
+  .toss-table-mobile {
+    display: block !important;
+  }
+
+  /* 모바일 카드 스타일 */
+  .toss-mobile-card {
+    background: white;
+    border-radius: 12px;
+    padding: 20px;
+    margin-bottom: 16px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    border: 1px solid #e2e8f0;
+  }
+
+  .toss-mobile-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 12px;
+  }
+
+  .toss-mobile-card-title {
+    font-weight: 600;
+    color: #1e293b;
+    margin: 0;
+    font-size: 16px;
+  }
+
+  .toss-mobile-card-badge {
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 12px;
+    font-weight: 500;
+  }
+
+  .toss-mobile-card-badge.admin {
+    background: #fef3c7;
+    color: #92400e;
+  }
+
+  .toss-mobile-card-badge.user {
+    background: #dbeafe;
+    color: #1e40af;
+  }
+
+  .toss-mobile-card-info {
+    color: #64748b;
+    font-size: 14px;
+    margin-bottom: 16px;
+  }
+
+  .toss-mobile-card-info > div {
+    margin-bottom: 4px;
+  }
+
+  .toss-mobile-card-form {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin-bottom: 16px;
+  }
+
+  .toss-mobile-card-form-group {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .toss-mobile-card-label {
+    font-size: 12px;
+    color: #64748b;
+    margin-bottom: 4px;
+    font-weight: 500;
+  }
+
+  .toss-mobile-card-actions {
+    text-align: right;
+  }
+}
+
+/* 태블릿 반응형 */
+@media (min-width: 769px) and (max-width: 1024px) {
+  .toss-filter-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+  }
+}
+
+/* 데스크톱 반응형 */
+@media (min-width: 1025px) {
+  .toss-filter-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+  }
+}
+
+/* 데스크톱에서 모바일 카드 숨기기 */
+@media (min-width: 769px) {
+  .toss-table-mobile {
+    display: none !important;
+  }
+
+  .toss-table-desktop {
+    display: block !important;
+  }
+}
+
+/* 기존 클래스들을 토스 스타일로 매핑 */
+.modern-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  padding: 24px;
+  background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+}
+
+.modern-card {
+  background: white;
+  border-radius: 20px;
+  padding: 48px 40px;
+  box-shadow: 
+    0 4px 6px -1px rgba(0, 0, 0, 0.1),
+    0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  max-width: 420px;
+  width: 100%;
+  border: 1px solid #e2e8f0;
+  animation: tossSlideUp 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+.modern-title {
+  font-size: 28px;
+  font-weight: 700;
+  color: #1e293b;
+  text-align: center;
+  margin-bottom: 8px;
+  letter-spacing: -0.025em;
+}
+
+.modern-subtitle {
+  font-size: 16px;
+  color: #64748b;
+  text-align: center;
+  margin-bottom: 32px;
+  font-weight: 400;
+}
+
+.modern-input-group {
+  margin-bottom: 20px;
+}
+
+.modern-input {
+  width: 100%;
+  padding: 16px 20px;
+  border: 2px solid #e2e8f0;
+  border-radius: 12px;
+  font-size: 16px;
+  transition: all 0.2s ease;
+  background: white;
+  color: #1e293b;
+  font-weight: 500;
+}
+
+.modern-input:focus {
+  outline: none;
+  border-color: #f97316;
+  box-shadow: 0 0 0 3px rgba(249, 115, 22, 0.1);
+}
+
+.modern-button {
+  width: 100%;
+  padding: 16px 24px;
+  background: #f97316;
+  color: white;
+  border: none;
+  border-radius: 12px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.modern-button:hover {
+  background: #ea580c;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(249, 115, 22, 0.3);
+}
+
+.modern-nav {
+  background: white;
+  border-bottom: 1px solid #e2e8f0;
+  padding: 16px 24px;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.modern-nav-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.modern-nav-brand {
+  font-size: 20px;
+  font-weight: 700;
+  color: #1e293b;
+}
+
+.modern-nav-button {
+  padding: 10px 16px;
+  background: #f8fafc;
+  color: #475569;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-decoration: none;
+}
+
+.modern-nav-button:hover {
+  background: #f1f5f9;
+  color: #1e293b;
+  transform: translateY(-1px);
+}
+
+.modern-dashboard {
+  padding: 100px 24px 24px;
+  max-width: 1200px;
+  margin: 0 auto;
+  min-height: 100vh;
+}
+
+.modern-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 24px;
+  margin-top: 32px;
+}
+
+.modern-card-dashboard {
+  background: white;
+  border-radius: 16px;
+  padding: 32px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  border: 1px solid #e2e8f0;
+  transition: all 0.2s ease;
+  cursor: pointer;
+}
+
+.modern-card-dashboard:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.modern-card-title {
+  font-size: 20px;
+  font-weight: 600;
+  color: #1e293b;
+  margin-bottom: 12px;
+}
+
+.modern-card-content {
+  color: #64748b;
+  line-height: 1.6;
+  margin-bottom: 20px;
+}
+
+.modern-loading {
+  display: inline-block;
+  width: 20px;
+  height: 20px;
+  border: 2px solid #e2e8f0;
+  border-radius: 50%;
+  border-top-color: #f97316;
+  animation: spin 1s linear infinite;
+}
+
+.modern-error {
+  background: #fef2f2;
+  border: 1px solid #fecaca;
+  color: #dc2626;
+  padding: 12px 16px;
+  border-radius: 8px;
+  margin-bottom: 16px;
+  font-size: 14px;
+}
+
+.dashboard-title {
+  font-size: 32px;
+  font-weight: 700;
+  color: #1e293b;
+  margin-bottom: 8px;
+  text-align: center;
+}
+
+.dashboard-subtitle {
+  font-size: 16px;
+  color: #64748b;
+  text-align: center;
+  margin-bottom: 40px;
+}
+
+/* 페이지 헤더 */
+.toss-page-header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 32px;
+  gap: 16px;
+  width: 100%;
+  text-align: center;
+}
+
+.toss-page-title-section {
+  width: 100%;
+  text-align: center;
+}
+
+.toss-page-title {
+  font-size: 32px;
+  font-weight: 700;
+  color: #1e293b;
+  margin-bottom: 8px;
+  line-height: 1.2;
+}
+
+.toss-page-subtitle {
+  font-size: 16px;
+  color: #64748b;
+  line-height: 1.5;
+  margin: 0;
+  white-space: normal;
+  word-break: normal;
+  text-align: center;
+}
+
+.toss-page-button {
+  flex-shrink: 0;
+  white-space: nowrap;
 }
