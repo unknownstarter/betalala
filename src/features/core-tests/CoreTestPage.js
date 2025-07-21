@@ -2,11 +2,11 @@ import React, { useState, useCallback, useEffect } from 'react';
 import { useAuth } from '../../shared/hooks/useAuth.js';
 import { serviceContainer } from '../../infrastructure/services/ServiceContainer.js';
 import { CORE_TEST_STEPS, CORE_TEST_STEP_LABELS } from '../../core/entities/CoreTest.js';
+import { FileUpload } from '../../shared/components/FileUpload.js';
 
 export const CoreTestPage = () => {
   const { user } = useAuth();
   const [uploads, setUploads] = useState({});
-  const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [success, setSuccess] = useState(null);
   const [completedSteps, setCompletedSteps] = useState([]);
@@ -101,11 +101,11 @@ export const CoreTestPage = () => {
   ];
 
   return (
-    <div className="modern-dashboard">
-      <h1 className="dashboard-title">
+    <div className="modern-dashboard" style={{ paddingTop: '20px' }}>
+      <h1 className="dashboard-title" style={{ marginBottom: '8px' }}>
         코어 테스트 인증
       </h1>
-      <p className="dashboard-subtitle">
+      <p className="dashboard-subtitle" style={{ marginBottom: '32px' }}>
         아래 단계들을 순서대로 완료하여 인증을 진행하세요.
       </p>
 
@@ -199,126 +199,102 @@ export const CoreTestPage = () => {
               </div>
             ) : (
               <>
-                <div className="modern-file-upload">
-                  <div style={{ 
-                    fontSize: '48px', 
-                    color: 'rgba(255, 255, 255, 0.8)', 
-                    marginBottom: '16px',
-                    textAlign: 'center'
-                  }}>
-                    📷
-                  </div>
-                  <p style={{ 
-                    color: 'rgba(255, 255, 255, 0.9)', 
-                    marginBottom: '8px',
-                    fontSize: '16px',
-                    fontWeight: '500'
-                  }}>
-                    클릭하여 파일 선택 또는 드래그 앤 드롭
-                  </p>
-                  <p style={{ 
-                    color: 'rgba(255, 255, 255, 0.7)', 
-                    fontSize: '14px',
-                    marginBottom: '16px'
-                  }}>
-                    PNG, JPG, GIF 최대 10MB
-                  </p>
-                  <input
-                    type="file"
-                    accept="image/*"
-                    onChange={(e) => {
-                      const file = e.target.files[0];
-                      if (file) {
-                        handleFileUpload(stepInfo.step, file);
-                      }
-                    }}
-                    style={{
-                      position: 'absolute',
-                      top: 0,
-                      left: 0,
-                      width: '100%',
-                      height: '100%',
-                      opacity: 0,
-                      cursor: 'pointer'
-                    }}
-                  />
-                  {uploads[stepInfo.step] && (
-                    <div style={{ 
-                      background: 'rgba(255, 255, 255, 0.2)',
-                      border: '1px solid rgba(255, 255, 255, 0.3)',
-                      borderRadius: '8px',
-                      padding: '12px',
-                      marginTop: '16px'
-                    }}>
-                      <p style={{ color: 'white', fontSize: '14px', margin: 0 }}>
-                        ✅ {uploads[stepInfo.step].name} ({(uploads[stepInfo.step].size / 1024 / 1024).toFixed(2)} MB)
-                      </p>
-                    </div>
-                  )}
-                </div>
+                <FileUpload
+                  onFileSelect={(file) => handleFileUpload(stepInfo.step, file)}
+                  accept="image/*"
+                  label="스크린샷 업로드"
+                  disabled={stepLoading[stepInfo.step]}
+                  selectedFile={uploads[stepInfo.step]}
+                />
                 
-                <div style={{ textAlign: 'center', marginTop: '20px' }}>
-                  <button
-                    type="button"
-                    onClick={() => handleStepSubmit(stepInfo.step)}
-                    disabled={stepLoading[stepInfo.step] || !uploads[stepInfo.step]}
-                    style={{
-                      background: stepLoading[stepInfo.step] || !uploads[stepInfo.step] ? 'rgba(255, 255, 255, 0.3)' : '#f97316',
-                      color: 'white',
-                      border: 'none',
-                      padding: '12px 24px',
-                      borderRadius: '8px',
-                      fontSize: '16px',
-                      fontWeight: '500',
-                      cursor: stepLoading[stepInfo.step] || !uploads[stepInfo.step] ? 'not-allowed' : 'pointer',
-                      transition: 'all 0.2s ease'
-                    }}
-                  >
-                    {stepLoading[stepInfo.step] ? (
-                      <>
-                        <span className="modern-loading" style={{ marginRight: '8px' }}></span>
-                        제출 중...
-                      </>
-                    ) : (
-                      '미션 완료'
-                    )}
-                  </button>
+                {/* 제출 버튼 섹션 */}
+                <div style={{ 
+                  background: '#f8fafc', 
+                  border: '1px solid #e2e8f0', 
+                  borderRadius: '12px', 
+                  padding: '20px',
+                  textAlign: 'center',
+                  marginTop: '20px'
+                }}>
+                  {!uploads[stepInfo.step] ? (
+                    <>
+                      <p style={{ 
+                        color: '#64748b', 
+                        fontSize: '14px', 
+                        marginBottom: '16px',
+                        lineHeight: '1.5'
+                      }}>
+                        스크린샷을 등록하면 제출할 수 있습니다.
+                      </p>
+                      <button
+                        disabled={true}
+                        style={{
+                          background: 'rgba(255, 255, 255, 0.3)',
+                          color: 'white',
+                          border: 'none',
+                          padding: '12px 24px',
+                          borderRadius: '8px',
+                          fontSize: '16px',
+                          fontWeight: '500',
+                          cursor: 'not-allowed',
+                          opacity: 0.5
+                        }}
+                      >
+                        미션 완료
+                      </button>
+                    </>
+                  ) : (
+                    <>
+                      <div style={{ 
+                        background: 'rgba(16, 185, 129, 0.1)',
+                        border: '1px solid rgba(16, 185, 129, 0.3)',
+                        borderRadius: '8px',
+                        padding: '12px',
+                        marginBottom: '16px'
+                      }}>
+                        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px' }}>
+                          <span style={{ color: '#10b981', fontSize: '16px' }}>📷</span>
+                          <span style={{ color: '#10b981', fontSize: '14px', fontWeight: '500' }}>
+                            {uploads[stepInfo.step].name}
+                          </span>
+                          <span style={{ color: '#10b981', fontSize: '12px' }}>
+                            ({(uploads[stepInfo.step].size / 1024 / 1024).toFixed(2)} MB)
+                          </span>
+                        </div>
+                      </div>
+                      <button
+                        type="button"
+                        onClick={() => handleStepSubmit(stepInfo.step)}
+                        disabled={stepLoading[stepInfo.step]}
+                        style={{
+                          background: stepLoading[stepInfo.step] ? 'rgba(255, 255, 255, 0.3)' : '#f97316',
+                          color: 'white',
+                          border: 'none',
+                          padding: '12px 24px',
+                          borderRadius: '8px',
+                          fontSize: '16px',
+                          fontWeight: '500',
+                          cursor: stepLoading[stepInfo.step] ? 'not-allowed' : 'pointer',
+                          transition: 'all 0.2s ease'
+                        }}
+                      >
+                        {stepLoading[stepInfo.step] ? (
+                          <>
+                            <span className="modern-loading" style={{ marginRight: '8px' }}></span>
+                            제출 중...
+                          </>
+                        ) : (
+                          '미션 완료'
+                        )}
+                      </button>
+                    </>
+                  )}
                 </div>
               </>
             )}
           </div>
         ))}
 
-        <div style={{ textAlign: 'center', marginTop: '32px' }}>
-          <div style={{
-            background: 'rgba(255, 255, 255, 0.1)',
-            border: '1px solid rgba(255, 255, 255, 0.2)',
-            borderRadius: '12px',
-            padding: '24px',
-            marginBottom: '24px'
-          }}>
-            <h3 style={{ color: 'white', marginBottom: '12px' }}>
-              진행 상황
-            </h3>
-            <p style={{ color: 'rgba(255, 255, 255, 0.8)', fontSize: '16px' }}>
-              완료된 미션: <strong style={{ color: '#10b981' }}>{completedSteps.length}</strong> / {steps.length}
-            </p>
-            <div style={{
-              background: 'rgba(255, 255, 255, 0.2)',
-              height: '8px',
-              borderRadius: '4px',
-              marginTop: '12px',
-              overflow: 'hidden'
-            }}>
-              <div style={{
-                background: '#10b981',
-                height: '100%',
-                width: `${(completedSteps.length / steps.length) * 100}%`,
-                transition: 'width 0.3s ease'
-              }}></div>
-            </div>
-          </div>
-        </div>
       </div>
     </div>
   );

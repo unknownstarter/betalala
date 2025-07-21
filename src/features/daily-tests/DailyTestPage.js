@@ -98,9 +98,9 @@ export const DailyTestPage = () => {
   }
 
   return (
-    <div className="toss-dashboard">
+    <div className="toss-dashboard" style={{ paddingTop: '20px' }}>
       {/* 페이지 헤더 */}
-      <div className="toss-page-header">
+      <div className="toss-page-header" style={{ marginBottom: '32px', gap: '8px' }}>
         <div className="toss-page-title-section">
           <h1 className="toss-page-title">데일리 테스트 인증</h1>
           <p className="toss-page-subtitle">
@@ -161,57 +161,91 @@ export const DailyTestPage = () => {
                 accept="image/*"
                 label="EV 주행거리 업데이트 스크린샷"
                 disabled={submitting}
+                selectedFile={mileageFile}
               />
               <FileUpload
                 onFileSelect={setCreditFile}
                 accept="image/*"
                 label="크레딧 수집 스크린샷"
                 disabled={submitting}
+                selectedFile={creditFile}
               />
             </div>
 
-            {mileageFile && creditFile && (
-              <div style={{ 
-                background: '#eff6ff', 
-                border: '1px solid #bfdbfe', 
-                borderRadius: '12px', 
-                padding: '16px',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'space-between'
-              }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
-                  <div style={{ display: 'flex', alignItems: 'center' }}>
-                    <div style={{ 
-                      width: '16px', 
-                      height: '16px', 
-                      background: '#3b82f6', 
-                      borderRadius: '2px',
-                      marginRight: '8px'
-                    }}></div>
-                    <span style={{ fontSize: '14px', color: '#1e40af' }}>{mileageFile.name}</span>
+            {/* 제출 버튼 섹션 */}
+            <div style={{ 
+              background: '#f8fafc', 
+              border: '1px solid #e2e8f0', 
+              borderRadius: '12px', 
+              padding: '20px',
+              textAlign: 'center'
+            }}>
+              {!mileageFile || !creditFile ? (
+                <>
+                  <p style={{ 
+                    color: '#64748b', 
+                    fontSize: '14px', 
+                    marginBottom: '16px',
+                    lineHeight: '1.5'
+                  }}>
+                    사진을 모두 등록하면 제출할 수 있습니다.
+                  </p>
+                  <button
+                    disabled={true}
+                    className="toss-button"
+                    style={{ 
+                      padding: '12px 24px', 
+                      fontSize: '16px',
+                      opacity: 0.5,
+                      cursor: 'not-allowed'
+                    }}
+                  >
+                    제출하기
+                  </button>
+                </>
+              ) : (
+                <>
+                  <div style={{ 
+                    background: '#eff6ff', 
+                    border: '1px solid #bfdbfe', 
+                    borderRadius: '8px', 
+                    padding: '12px',
+                    marginBottom: '16px'
+                  }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '16px', justifyContent: 'center' }}>
+                      <div style={{ display: 'flex', alignItems: 'center' }}>
+                        <div style={{ 
+                          width: '16px', 
+                          height: '16px', 
+                          background: '#3b82f6', 
+                          borderRadius: '2px',
+                          marginRight: '8px'
+                        }}></div>
+                        <span style={{ fontSize: '14px', color: '#1e40af' }}>{mileageFile.name}</span>
+                      </div>
+                      <div style={{ display: 'flex', alignItems: 'center' }}>
+                        <div style={{ 
+                          width: '16px', 
+                          height: '16px', 
+                          background: '#3b82f6', 
+                          borderRadius: '2px',
+                          marginRight: '8px'
+                        }}></div>
+                        <span style={{ fontSize: '14px', color: '#1e40af' }}>{creditFile.name}</span>
+                      </div>
+                    </div>
                   </div>
-                  <div style={{ display: 'flex', alignItems: 'center' }}>
-                    <div style={{ 
-                      width: '16px', 
-                      height: '16px', 
-                      background: '#3b82f6', 
-                      borderRadius: '2px',
-                      marginRight: '8px'
-                    }}></div>
-                    <span style={{ fontSize: '14px', color: '#1e40af' }}>{creditFile.name}</span>
-                  </div>
-                </div>
-                <button
-                  onClick={handleSubmit}
-                  disabled={submitting}
-                  className="toss-button"
-                  style={{ padding: '8px 16px', fontSize: '14px' }}
-                >
-                  {submitting ? '제출 중...' : '제출'}
-                </button>
-              </div>
-            )}
+                  <button
+                    onClick={handleSubmit}
+                    disabled={submitting}
+                    className="toss-button"
+                    style={{ padding: '12px 24px', fontSize: '16px' }}
+                  >
+                    {submitting ? '제출 중...' : '제출하기'}
+                  </button>
+                </>
+              )}
+            </div>
           </div>
         )}
       </div>

@@ -1,3 +1,13 @@
+/* 모바일 게임 스타일 게이지 바 애니메이션 */
+@keyframes shimmer {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(100%);
+  }
+}
+
 /* Reset and base styles */
 * {
   margin: 0;
