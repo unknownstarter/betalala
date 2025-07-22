@@ -1,15 +1,15 @@
 {
   "files": {
     "main.css": "/betalala/static/css/main.bf02c519.css",
-    "main.js": "/betalala/static/js/main.382a60fc.js",
+    "main.js": "/betalala/static/js/main.272c4d22.js",
     "static/js/453.2f8b3880.chunk.js": "/betalala/static/js/453.2f8b3880.chunk.js",
     "index.html": "/betalala/index.html",
     "main.bf02c519.css.map": "/betalala/static/css/main.bf02c519.css.map",
-    "main.382a60fc.js.map": "/betalala/static/js/main.382a60fc.js.map",
+    "main.272c4d22.js.map": "/betalala/static/js/main.272c4d22.js.map",
     "453.2f8b3880.chunk.js.map": "/betalala/static/js/453.2f8b3880.chunk.js.map"
   },
   "entrypoints": [
     "static/css/main.bf02c519.css",
-    "static/js/main.382a60fc.js"
+    "static/js/main.272c4d22.js"
   ]
 }
