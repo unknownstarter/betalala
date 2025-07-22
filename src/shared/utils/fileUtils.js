@@ -71,7 +71,6 @@ export const getFileExtension = (filename) => {
  */
 export const generateSafeFileName = (originalName, prefix = '') => {
   const timestamp = Date.now();
-  const extension = getFileExtension(originalName);
   
   // 한글, 띄어쓰기, 특수문자를 모두 제거하고 영문/숫자만 남김
   const safeName = originalName

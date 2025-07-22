@@ -60,7 +60,7 @@ export class FileUploadService {
 
       // Supabase Storage 업로드
       console.log('☁️ Supabase Storage 업로드 시작...');
-      const { data, error } = await supabase.storage
+      const { error } = await supabase.storage
         .from(this.bucketName)
         .upload(fullPath, fileToUpload, {
           cacheControl: '3600',
