@@ -18,7 +18,8 @@ export const Navigation = () => {
       console.log('SignOut result:', result);
       if (result.success) {
         console.log('Logout successful, navigating to login');
-        navigate('/login');
+        // 로그아웃 후 강제 새로고침으로 상태 초기화
+        window.location.href = '/#/login';
       } else {
         console.error('Logout failed:', result.error);
         alert('로그아웃에 실패했습니다: ' + result.error);
