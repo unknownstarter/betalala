@@ -19,17 +19,23 @@ export class DailyTestUseCase {
 
   async submitDailyTest(userId, date, mileageFile, creditFile) {
     try {
-      // 파일 업로드
-      const mileagePath = `daily-tests/${userId}/${date}/mileage-${Date.now()}-${mileageFile.name}`;
-      const creditPath = `daily-tests/${userId}/${date}/credit-${Date.now()}-${creditFile.name}`;
+      // 파일 업로드 (개선된 서비스 사용)
+      const basePath = `daily-tests/${userId}/${date}`;
+      const mileagePath = `${basePath}/mileage`;
+      const creditPath = `${basePath}/credit`;
 
       const [mileageUpload, creditUpload] = await Promise.all([
-        this.dailyTestRepository.uploadFile(mileageFile, mileagePath),
-        this.dailyTestRepository.uploadFile(creditFile, creditPath)
+        this.dailyTestRepository.uploadFileWithService(mileageFile, mileagePath),
+        this.dailyTestRepository.uploadFileWithService(creditFile, creditPath)
       ]);
 
-      if (mileageUpload.error) throw mileageUpload.error;
-      if (creditUpload.error) throw creditUpload.error;
+      if (!mileageUpload.success) {
+        return { success: false, error: `주행거리 이미지 업로드 실패: ${mileageUpload.error}` };
+      }
+
+      if (!creditUpload.success) {
+        return { success: false, error: `크레딧 이미지 업로드 실패: ${creditUpload.error}` };
+      }
 
       // 데일리 테스트 생성
       const dailyTestData = {
@@ -45,6 +51,7 @@ export class DailyTestUseCase {
       const dailyTest = DailyTest.fromJson(data[0]);
       return { success: true, dailyTest };
     } catch (error) {
+      console.error('Daily test submission error:', error);
       return { success: false, error: error.message };
     }
   }

@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { validateFile, formatFileSize } from '../utils/fileUtils.js';
 
 export const FileUpload = ({ 
   onFileSelect, 
@@ -6,9 +7,12 @@ export const FileUpload = ({
   label = '파일 선택',
   className = '',
   disabled = false,
-  selectedFile = null
+  selectedFile = null,
+  maxSize = 10 * 1024 * 1024, // 10MB
+  showValidation = true
 }) => {
   const [dragActive, setDragActive] = useState(false);
+  const [validationError, setValidationError] = useState(null);
 
   const handleDrag = (e) => {
     e.preventDefault();
@@ -20,20 +24,38 @@ export const FileUpload = ({
     }
   };
 
+  const handleFileSelect = (file) => {
+    if (!file) {
+      onFileSelect(null);
+      setValidationError(null);
+      return;
+    }
+
+    // 파일 검증
+    const validation = validateFile(file);
+    if (!validation.isValid) {
+      setValidationError(validation.error);
+      return;
+    }
+
+    setValidationError(null);
+    onFileSelect(file);
+  };
+
   const handleDrop = (e) => {
     e.preventDefault();
     e.stopPropagation();
     setDragActive(false);
     
     if (e.dataTransfer.files && e.dataTransfer.files[0]) {
-      onFileSelect(e.dataTransfer.files[0]);
+      handleFileSelect(e.dataTransfer.files[0]);
     }
   };
 
   const handleChange = (e) => {
     e.preventDefault();
     if (e.target.files && e.target.files[0]) {
-      onFileSelect(e.target.files[0]);
+      handleFileSelect(e.target.files[0]);
     }
   };
 
@@ -67,11 +89,11 @@ export const FileUpload = ({
               {selectedFile.name}
             </span>
             <span style={{ color: '#10b981', fontSize: '12px' }}>
-              ({(selectedFile.size / 1024 / 1024).toFixed(2)} MB)
+              ({formatFileSize(selectedFile.size)})
             </span>
           </div>
           <button
-            onClick={() => onFileSelect(null)}
+            onClick={() => handleFileSelect(null)}
             style={{
               background: 'transparent',
               border: '1px solid #10b981',
@@ -166,10 +188,25 @@ export const FileUpload = ({
           </div>
           
           <p style={{ fontSize: '14px', color: '#6c757d', margin: '8px 0 0 0' }}>
-            PNG, JPG, GIF 최대 10MB
+            PNG, JPG, WebP 최대 {formatFileSize(maxSize)}
           </p>
         </div>
       </div>
+
+      {/* 검증 에러 메시지 */}
+      {showValidation && validationError && (
+        <div style={{
+          background: '#fef2f2',
+          border: '1px solid #fecaca',
+          color: '#dc2626',
+          padding: '8px 12px',
+          borderRadius: '6px',
+          marginTop: '8px',
+          fontSize: '14px'
+        }}>
+          ⚠️ {validationError}
+        </div>
+      )}
     </div>
   );
 }; 

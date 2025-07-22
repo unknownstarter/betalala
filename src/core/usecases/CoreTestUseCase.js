@@ -19,16 +19,19 @@ export class CoreTestUseCase {
 
   async submitCoreTest(userId, step, file) {
     try {
-      // 파일 업로드
-      const filePath = `core-tests/${userId}/${step}/${Date.now()}-${file.name}`;
-      const { data: uploadData, error: uploadError } = await this.coreTestRepository.uploadFile(file, filePath);
-      if (uploadError) throw uploadError;
+      // 파일 업로드 (개선된 서비스 사용)
+      const filePath = `core-tests/${userId}/${step}`;
+      const uploadResult = await this.coreTestRepository.uploadFileWithService(file, filePath);
+      
+      if (!uploadResult.success) {
+        return { success: false, error: uploadResult.error };
+      }
 
       // 코어 테스트 생성
       const coreTestData = {
         user_id: userId,
         step,
-        file_url: uploadData.path
+        file_url: uploadResult.data.path
       };
 
       const { data, error } = await this.coreTestRepository.createCoreTest(coreTestData);
@@ -37,6 +40,7 @@ export class CoreTestUseCase {
       const coreTest = CoreTest.fromJson(data[0]);
       return { success: true, coreTest };
     } catch (error) {
+      console.error('Core test submission error:', error);
       return { success: false, error: error.message };
     }
   }

@@ -11,6 +11,7 @@ export const CoreTestPage = () => {
   const [success, setSuccess] = useState(null);
   const [completedSteps, setCompletedSteps] = useState([]);
   const [stepLoading, setStepLoading] = useState({});
+  const [uploadProgress, setUploadProgress] = useState({});
 
   const coreTestUseCase = serviceContainer.getCoreTestUseCase();
 
@@ -46,11 +47,36 @@ export const CoreTestPage = () => {
     }
 
     setStepLoading(prev => ({ ...prev, [step]: true }));
+    setUploadProgress(prev => ({ ...prev, [step]: 0 }));
     setError(null);
 
     try {
+      // 업로드 진행률 시뮬레이션 (실제로는 서비스에서 처리)
+      const progressInterval = setInterval(() => {
+        setUploadProgress(prev => {
+          const current = prev[step] || 0;
+          if (current < 90) {
+            return { ...prev, [step]: current + 10 };
+          }
+          return prev;
+        });
+      }, 200);
+
+      console.log('📤 코어 테스트 제출 시작:', {
+        step: step,
+        fileName: uploads[step].name,
+        fileSize: uploads[step].size
+      });
+
       const result = await coreTestUseCase.submitCoreTest(user.id, step, uploads[step]);
+      
+      clearInterval(progressInterval);
+      setUploadProgress(prev => ({ ...prev, [step]: 100 }));
+
+      console.log('📤 코어 테스트 제출 결과:', result);
+
       if (result.success) {
+        console.log('✅ 코어 테스트 제출 성공');
         setCompletedSteps(prev => [...prev, step]);
         setUploads(prev => {
           const newUploads = { ...prev };
@@ -58,7 +84,17 @@ export const CoreTestPage = () => {
           return newUploads;
         });
         setSuccess(`${CORE_TEST_STEP_LABELS[step]} 완료!`);
+        
+        // 진행률 초기화
+        setTimeout(() => {
+          setUploadProgress(prev => {
+            const newProgress = { ...prev };
+            delete newProgress[step];
+            return newProgress;
+          });
+        }, 1000);
       } else {
+        console.error('❌ 코어 테스트 제출 실패:', result.error);
         setError(result.error);
       }
     } catch (err) {
@@ -133,40 +169,37 @@ export const CoreTestPage = () => {
 
       <div style={{ maxWidth: '800px', margin: '0 auto' }}>
         {steps.map((stepInfo, index) => (
-          <div key={stepInfo.step} className="modern-card-dashboard" style={{ marginBottom: '24px' }}>
+          <div key={stepInfo.step} className="modern-card-dashboard" style={{ 
+            marginBottom: '24px',
+            background: isStepCompleted(stepInfo.step) ? '#f8f9fa' : 'white',
+            border: isStepCompleted(stepInfo.step) ? '1px solid #e9ecef' : '1px solid #e2e8f0'
+          }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
-              <h2 className="modern-card-title">
+              <h2 className="modern-card-title" style={{
+                color: isStepCompleted(stepInfo.step) ? '#6c757d' : '#1a202c'
+              }}>
                 {index + 1}. {stepInfo.title}
               </h2>
-              {isStepCompleted(stepInfo.step) && (
-                <span style={{
-                  background: '#10b981',
-                  color: 'white',
-                  padding: '4px 12px',
-                  borderRadius: '16px',
-                  fontSize: '12px',
-                  fontWeight: '500'
-                }}>
-                  ✅ 완료
-                </span>
-              )}
             </div>
-            <p className="modern-card-content" style={{ marginBottom: '20px' }}>
+            <p className="modern-card-content" style={{ 
+              marginBottom: '20px',
+              color: isStepCompleted(stepInfo.step) ? '#6c757d' : '#4a5568'
+            }}>
               {stepInfo.description}
             </p>
             
             {isStepCompleted(stepInfo.step) ? (
               <div style={{
-                background: 'rgba(16, 185, 129, 0.1)',
-                border: '1px solid rgba(16, 185, 129, 0.3)',
+                background: '#e9ecef',
+                border: '1px solid #dee2e6',
                 borderRadius: '8px',
                 padding: '16px',
                 textAlign: 'center'
               }}>
-                <p style={{ color: '#10b981', fontSize: '16px', fontWeight: '500', marginBottom: '12px' }}>
+                <p style={{ color: '#495057', fontSize: '16px', fontWeight: '500', marginBottom: '12px' }}>
                   ✅ 미션 완료!
                 </p>
-                <p style={{ color: 'rgba(255, 255, 255, 0.7)', fontSize: '14px', marginBottom: '16px' }}>
+                <p style={{ color: '#6c757d', fontSize: '14px', marginBottom: '16px' }}>
                   스크린샷을 다시 등록하려면 아래 버튼을 클릭하세요.
                 </p>
                 <button
@@ -262,31 +295,59 @@ export const CoreTestPage = () => {
                           </span>
                         </div>
                       </div>
-                      <button
-                        type="button"
-                        onClick={() => handleStepSubmit(stepInfo.step)}
-                        disabled={stepLoading[stepInfo.step]}
-                        style={{
-                          background: stepLoading[stepInfo.step] ? 'rgba(255, 255, 255, 0.3)' : '#f97316',
-                          color: 'white',
-                          border: 'none',
-                          padding: '12px 24px',
-                          borderRadius: '8px',
-                          fontSize: '16px',
-                          fontWeight: '500',
-                          cursor: stepLoading[stepInfo.step] ? 'not-allowed' : 'pointer',
-                          transition: 'all 0.2s ease'
-                        }}
-                      >
-                        {stepLoading[stepInfo.step] ? (
-                          <>
-                            <span className="modern-loading" style={{ marginRight: '8px' }}></span>
-                            제출 중...
-                          </>
-                        ) : (
-                          '미션 완료'
-                        )}
-                      </button>
+                      {uploadProgress[stepInfo.step] !== undefined ? (
+                        <div style={{ width: '100%' }}>
+                          <div style={{
+                            background: '#e5e7eb',
+                            borderRadius: '8px',
+                            height: '8px',
+                            marginBottom: '12px',
+                            overflow: 'hidden'
+                          }}>
+                            <div style={{
+                              background: '#10b981',
+                              height: '100%',
+                              width: `${uploadProgress[stepInfo.step]}%`,
+                              transition: 'width 0.3s ease',
+                              borderRadius: '8px'
+                            }} />
+                          </div>
+                          <p style={{ 
+                            fontSize: '14px', 
+                            color: '#6b7280', 
+                            margin: '0 0 12px 0',
+                            textAlign: 'center'
+                          }}>
+                            업로드 중... {uploadProgress[stepInfo.step]}%
+                          </p>
+                        </div>
+                      ) : (
+                        <button
+                          type="button"
+                          onClick={() => handleStepSubmit(stepInfo.step)}
+                          disabled={stepLoading[stepInfo.step]}
+                          style={{
+                            background: stepLoading[stepInfo.step] ? 'rgba(255, 255, 255, 0.3)' : '#f97316',
+                            color: 'white',
+                            border: 'none',
+                            padding: '12px 24px',
+                            borderRadius: '8px',
+                            fontSize: '16px',
+                            fontWeight: '500',
+                            cursor: stepLoading[stepInfo.step] ? 'not-allowed' : 'pointer',
+                            transition: 'all 0.2s ease'
+                          }}
+                        >
+                          {stepLoading[stepInfo.step] ? (
+                            <>
+                              <span className="modern-loading" style={{ marginRight: '8px' }}></span>
+                              제출 중...
+                            </>
+                          ) : (
+                            '미션 완료'
+                          )}
+                        </button>
+                      )}
                     </>
                   )}
                 </div>

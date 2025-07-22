@@ -14,6 +14,7 @@ export const DailyTestPage = () => {
   const [error, setError] = useState(null);
   const [mileageFile, setMileageFile] = useState(null);
   const [creditFile, setCreditFile] = useState(null);
+  const [uploadProgress, setUploadProgress] = useState(0);
 
   const dailyTestUseCase = serviceContainer.getDailyTestUseCase();
   const today = format(new Date(), 'yyyy-MM-dd');
@@ -67,14 +68,34 @@ export const DailyTestPage = () => {
 
     try {
       setSubmitting(true);
+      setUploadProgress(0);
       setError(null);
       
+      // 업로드 진행률 시뮬레이션
+      const progressInterval = setInterval(() => {
+        setUploadProgress(prev => {
+          if (prev < 90) {
+            return prev + 10;
+          }
+          return prev;
+        });
+      }, 200);
+
       const result = await dailyTestUseCase.submitDailyTest(user.id, today, mileageFile, creditFile);
+      
+      clearInterval(progressInterval);
+      setUploadProgress(100);
+
       if (result.success) {
         setTodayTest(result.dailyTest);
         setDailyTests(prev => [result.dailyTest, ...prev]);
         setMileageFile(null);
         setCreditFile(null);
+        
+        // 진행률 초기화
+        setTimeout(() => {
+          setUploadProgress(0);
+        }, 1000);
       } else {
         setError(result.error);
       }
@@ -128,8 +149,8 @@ export const DailyTestPage = () => {
 
         {todayTest ? (
           <div style={{ 
-            background: '#f0fdf4', 
-            border: '1px solid #bbf7d0', 
+            background: '#f8f9fa', 
+            border: '1px solid #e9ecef', 
             borderRadius: '12px', 
             padding: '16px',
             display: 'flex',
@@ -138,7 +159,7 @@ export const DailyTestPage = () => {
             <div style={{ 
               width: '20px', 
               height: '20px', 
-              background: '#22c55e', 
+              background: '#6c757d', 
               borderRadius: '50%',
               marginRight: '12px',
               display: 'flex',
@@ -147,7 +168,7 @@ export const DailyTestPage = () => {
             }}>
               <span style={{ color: 'white', fontSize: '12px', fontWeight: 'bold' }}>✓</span>
             </div>
-            <span style={{ color: '#166534', fontWeight: '500' }}>오늘 인증이 완료되었습니다!</span>
+            <span style={{ color: '#495057', fontWeight: '500' }}>오늘 인증이 완료되었습니다!</span>
           </div>
         ) : (
           <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
@@ -235,14 +256,42 @@ export const DailyTestPage = () => {
                       </div>
                     </div>
                   </div>
-                  <button
-                    onClick={handleSubmit}
-                    disabled={submitting}
-                    className="toss-button"
-                    style={{ padding: '12px 24px', fontSize: '16px' }}
-                  >
-                    {submitting ? '제출 중...' : '제출하기'}
-                  </button>
+                  {uploadProgress > 0 ? (
+                    <div style={{ width: '100%' }}>
+                      <div style={{
+                        background: '#e5e7eb',
+                        borderRadius: '8px',
+                        height: '8px',
+                        marginBottom: '12px',
+                        overflow: 'hidden'
+                      }}>
+                        <div style={{
+                          background: '#10b981',
+                          height: '100%',
+                          width: `${uploadProgress}%`,
+                          transition: 'width 0.3s ease',
+                          borderRadius: '8px'
+                        }} />
+                      </div>
+                      <p style={{ 
+                        fontSize: '14px', 
+                        color: '#6b7280', 
+                        margin: '0 0 12px 0',
+                        textAlign: 'center'
+                      }}>
+                        업로드 중... {uploadProgress}%
+                      </p>
+                    </div>
+                  ) : (
+                    <button
+                      onClick={handleSubmit}
+                      disabled={submitting}
+                      className="toss-button"
+                      style={{ padding: '12px 24px', fontSize: '16px' }}
+                    >
+                      {submitting ? '제출 중...' : '제출하기'}
+                    </button>
+                  )}
                 </>
               )}
             </div>

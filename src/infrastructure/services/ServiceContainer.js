@@ -7,6 +7,8 @@ import { AuthUseCase } from '../../core/usecases/AuthUseCase.js';
 import { CoreTestUseCase } from '../../core/usecases/CoreTestUseCase.js';
 import { DailyTestUseCase } from '../../core/usecases/DailyTestUseCase.js';
 import { AdminUseCase } from '../../core/usecases/AdminUseCase.js';
+import { FileUploadService } from './FileUploadService.js';
+import { EdgeFunctionService } from './EdgeFunctionService.js';
 
 class ServiceContainer {
   constructor() {
@@ -19,6 +21,8 @@ class ServiceContainer {
     this._coreTestUseCase = null;
     this._dailyTestUseCase = null;
     this._adminUseCase = null;
+    this._fileUploadService = null;
+    this._edgeFunctionService = null;
   }
 
   // Repositories
@@ -86,6 +90,22 @@ class ServiceContainer {
       this._adminUseCase = new AdminUseCase(this.getAdminRepository());
     }
     return this._adminUseCase;
+  }
+
+  // File Upload Service
+  getFileUploadService() {
+    if (!this._fileUploadService) {
+      this._fileUploadService = new FileUploadService();
+    }
+    return this._fileUploadService;
+  }
+
+  // Edge Function Service
+  getEdgeFunctionService() {
+    if (!this._edgeFunctionService) {
+      this._edgeFunctionService = new EdgeFunctionService();
+    }
+    return this._edgeFunctionService;
   }
 }
 
